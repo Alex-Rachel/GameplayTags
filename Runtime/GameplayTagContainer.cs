@@ -347,6 +347,9 @@ namespace GameplayTags
             if (rhs.IsEmpty)
                 new GameplayTagContainer(lhs);
 
+            if (!union.m_Indices.IsCreated)
+                union.m_Indices = GameplayTagContainerIndices.Create();
+
             OrderedListUnion(lhs.Indices.Explicit, rhs.Indices.Explicit, union.m_Indices.Explicit);
             OrderedListUnion(lhs.Indices.Implicit, rhs.Indices.Implicit, union.m_Indices.Implicit);
 
@@ -549,8 +552,8 @@ namespace GameplayTags
                 }
             }
         }
-        
-        [OnSerializing] 
+
+        [OnSerializing]
         void OnBeforeSerialize()
         {
             m_SerializedExplicitTags ??= new();
