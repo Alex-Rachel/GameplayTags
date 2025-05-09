@@ -48,8 +48,8 @@ namespace GameplayTags
         internal readonly void CopyTo(in GameplayTagContainerIndices other)
         {
             other.Clear();
-            other.Explicit.AddRange(other.Explicit);
-            other.Implicit.AddRange(other.Implicit);
+            other.Explicit.AddRange(this.Explicit);
+            other.Implicit.AddRange(this.Implicit);
         }
     }
 
@@ -216,7 +216,7 @@ namespace GameplayTags
                 return;
 
             GameplayTagContainerIndices.Create(ref dest.m_Indices);
-            dest.m_Indices.CopyTo(src.Indices);
+            src.Indices.CopyTo(dest.m_Indices);
         }
 
         /// <summary>
@@ -337,8 +337,9 @@ namespace GameplayTags
             }
 
             GameplayTagContainer union = new();
+            GameplayTagContainerIndices.Create(ref union.m_Indices);
 
-            if (lhs.IsEmpty || rhs.IsEmpty)
+            if (lhs.IsEmpty && rhs.IsEmpty)
                 return union;
 
             if (lhs.IsEmpty)
@@ -346,9 +347,6 @@ namespace GameplayTags
 
             if (rhs.IsEmpty)
                 new GameplayTagContainer(lhs);
-
-            if (!union.m_Indices.IsCreated)
-                union.m_Indices = GameplayTagContainerIndices.Create();
 
             OrderedListUnion(lhs.Indices.Explicit, rhs.Indices.Explicit, union.m_Indices.Explicit);
             OrderedListUnion(lhs.Indices.Implicit, rhs.Indices.Implicit, union.m_Indices.Implicit);
